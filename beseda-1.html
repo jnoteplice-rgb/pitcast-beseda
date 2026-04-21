@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pitcast #1 — Vize a hodnoty Pitlandu</title>
+<style>
+  :root{
+    --bg:#000000; --panel:#111111; --panel-2:#1a1a1a;
+    --text:#ffffff; --muted:#9a9a9a; --line:#262626;
+    --accent:#c6ff00; --accent-2:#ffffff;
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.55}
+  a{color:var(--accent-2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  button{font-family:inherit}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+  /* hero */
+  header.hero{background:#000;padding:48px 0 32px;border-bottom:1px solid var(--line)}
+  .hero-title{font-size:32px;font-weight:700;letter-spacing:-0.02em;margin:0 0 6px}
+  .hero-sub{color:var(--muted);font-size:16px;margin:0 0 24px}
+  .video-wrap{position:relative;padding-top:56.25%;background:#000;border-radius:12px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,0.4)}
+  .video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .hero-meta{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:14px;margin-top:14px}
+  .hero-meta span::before{content:"•";color:var(--line);margin-right:10px}
+  .hero-meta span:first-child::before{content:none;margin:0}
+
+  /* sections */
+  section{padding:44px 0;border-bottom:1px solid var(--line)}
+  section:last-of-type{border-bottom:none}
+  h2{font-size:24px;font-weight:700;letter-spacing:-0.01em;margin:0 0 6px}
+  .title-sep{color:var(--muted);font-weight:400;margin:0 6px}
+  .section-lead{color:var(--muted);margin:0 0 22px;font-size:15px}
+
+  /* chapters */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .filter{background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:7px 14px;border-radius:999px;cursor:pointer;font-size:13px;transition:all .15s}
+  .filter:hover{border-color:var(--accent);color:var(--text)}
+  .filter.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600}
+  .chapters{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+  .chapter{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:4px}
+  .chapter:hover{border-color:var(--accent);transform:translateY(-1px)}
+  .chapter .ts{color:var(--accent);font-family:ui-monospace,Menlo,monospace;font-size:13px;font-weight:600}
+  .chapter .title{font-size:15px;font-weight:600}
+  .chapter .cat{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:0.06em}
+
+  /* pilíře */
+  .pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+  .pillar{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:18px}
+  .pillar.bezp{border-left-width:6px}
+  .pillar h3{margin:0 0 8px;font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .pillar .num{font-size:11px;font-weight:700;color:var(--muted)}
+  .pillar .def{font-size:14px;color:var(--muted);margin:0 0 12px}
+  .pillar blockquote{margin:0 0 12px;padding:10px 12px;background:var(--panel-2);border-radius:6px;font-size:13px;line-height:1.5;color:var(--text);border-left:2px solid var(--line)}
+  .pillar blockquote cite{display:block;color:var(--muted);font-size:12px;margin-top:6px;font-style:normal}
+  .pillar .practice{font-size:13px;color:var(--text)}
+  .pillar .practice strong{color:var(--accent-2)}
+  .ts-btn{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;background:transparent;border:1px solid var(--line);color:var(--accent);font-family:ui-monospace,Menlo,monospace;font-size:12px;cursor:pointer;transition:all .15s}
+  .ts-btn:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+
+  /* archetyp */
+  .archetype{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .archetype blockquote{margin:0;font-size:18px;line-height:1.5;font-style:italic;color:var(--text);padding-left:16px;border-left:3px solid var(--accent)}
+  .archetype blockquote cite{display:block;color:var(--muted);font-size:13px;margin-top:10px;font-style:normal}
+  .archetype .traits{list-style:none;padding:0;margin:0}
+  .archetype .traits li{padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .archetype .traits li:last-child{border-bottom:none}
+  .archetype .traits strong{color:var(--accent-2);display:block;font-size:13px;margin-bottom:2px}
+  @media (max-width:760px){.archetype{grid-template-columns:1fr}}
+
+  /* fuckupy */
+  .fuckups{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+  .fuck{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;position:relative}
+  .fuck .tag{position:absolute;top:10px;right:12px;font-size:11px;color:var(--muted);font-family:ui-monospace,Menlo,monospace}
+  .fuck h4{margin:0 0 6px;font-size:15px;font-weight:700;padding-right:80px}
+  .fuck p{margin:0 0 10px;font-size:13px;color:var(--muted);line-height:1.5}
+  .fuck .lesson{font-size:13px;color:var(--text);padding-top:8px;border-top:1px dashed var(--line)}
+  .fuck .lesson strong{color:var(--accent)}
+
+  /* AI search */
+  .ai-box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px}
+  .ai-input-row{display:flex;gap:10px;margin-bottom:14px}
+  .ai-input{flex:1;background:var(--bg);border:1px solid var(--line);color:var(--text);padding:12px 14px;border-radius:8px;font-size:15px;font-family:inherit;outline:none}
+  .ai-input:focus{border-color:var(--accent)}
+  .ai-submit{background:var(--accent);border:none;color:#000;padding:12px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-size:14px;transition:all .15s}
+  .ai-submit:hover{filter:brightness(1.1)}
+  .ai-submit:disabled{opacity:0.5;cursor:not-allowed}
+  .ai-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .ai-chip{background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:6px 12px;border-radius:999px;cursor:pointer;font-size:12px;transition:all .15s}
+  .ai-chip:hover{border-color:var(--accent);color:var(--text)}
+  .ai-answer{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin-top:10px;display:none}
+  .ai-answer.show{display:block}
+  .ai-answer.loading .ans-text::after{content:"…";animation:dots 1.4s infinite}
+  @keyframes dots{0%,20%{content:"."}40%{content:".."}60%,100%{content:"..."}}
+  .ai-answer .ans-text{font-size:15px;line-height:1.6;margin:0 0 14px}
+  .ai-answer .ans-start{background:var(--panel-2);border-left:3px solid var(--accent);padding:10px 12px;border-radius:4px;margin-bottom:14px;font-size:13px}
+  .ai-answer .ans-start strong{color:var(--accent-2)}
+  .ai-answer .ans-citations{display:flex;flex-direction:column;gap:8px}
+  .ai-answer .cite-item{background:var(--panel-2);padding:10px 12px;border-radius:6px;border:1px solid var(--line);font-size:13px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:all .15s}
+  .ai-answer .cite-item:hover{border-color:var(--accent)}
+  .ai-answer .cite-item .cite-ts{color:var(--accent);font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:600;flex-shrink:0;padding-top:1px}
+  .ai-answer .cite-item .cite-body{flex:1}
+  .ai-answer .cite-item .cite-spk{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px}
+  .ai-error{color:var(--muted);font-size:14px;padding:10px 0}
+
+  /* glossary */
+  .glossary{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+  .term{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+  .term dt{font-weight:700;color:var(--accent-2);font-size:14px;margin-bottom:3px}
+  .term dd{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+
+  /* reflect */
+  .reflect-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:820px){.reflect-grid{grid-template-columns:1fr}}
+  .reflect{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px;display:flex;flex-direction:column}
+  .reflect .reflect-h{margin:0 0 4px;font-size:18px;font-weight:700;color:var(--text)}
+  .reflect .reflect-sub{margin:0 0 16px;font-size:13px;color:var(--muted)}
+  .reflect textarea{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);padding:12px;border-radius:8px;font-size:14px;font-family:inherit;resize:vertical;min-height:120px;margin-bottom:12px;outline:none}
+  .reflect textarea:focus{border-color:var(--accent)}
+  .reflect label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+  .reflect button{background:var(--accent);border:none;color:#000;padding:10px 18px;border-radius:8px;font-weight:700;cursor:pointer;font-size:14px;align-self:flex-start}
+  .reflect button:hover{filter:brightness(1.1)}
+  .reflect .text-input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px;font-family:inherit;margin-bottom:10px;outline:none}
+  .reflect .text-input:focus{border-color:var(--accent)}
+  .reflect .text-input:disabled{opacity:0.5;cursor:not-allowed}
+  .reflect .check-row,.reflect .radio-row{display:flex;align-items:center;gap:10px;padding:6px 0;margin:0 0 4px;cursor:pointer;color:var(--text);font-size:14px}
+  .reflect .check-row input,.reflect .radio-row input{accent-color:var(--accent);width:16px;height:16px;cursor:pointer}
+  .reflect .check-row span,.reflect .radio-row span{flex:1}
+
+  /* footer */
+  footer{padding:30px 0;text-align:center;color:var(--muted);font-size:13px}
+
+  /* mobile */
+  @media (max-width:640px){
+    .hero-title{font-size:24px}
+    .chapters{grid-template-columns:1fr}
+    section{padding:32px 0}
+    .ai-input-row{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1 class="hero-title">Pitcast #1 — Vize a hodnoty Pitlandu</h1>
+    <p class="hero-sub">Beseda s Jiřím Matelou a Jiřím Novákem o tom, jak Pitland vznikl, kam míří a co drží tým pohromadě.</p>
+    <div class="hero-meta">
+      <span>15. 4. 2026</span>
+      <span>1 h 18 min</span>
+      <span>Jiří Matela &amp; Jiří Novák</span>
+      <span>Pitland, Praha-Zličín</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============== VIDEO ============== -->
+<section id="video">
+  <div class="wrap">
+    <h2>Proč Pitland vznikl a kam jde <span class="title-sep">|</span> Beseda o vizi a hodnotách <span class="title-sep">|</span> Pitcast #1</h2>
+    <p class="section-lead">Pokud máš radši vlastní cestu, klikni níž na konkrétní kapitolu nebo hodnotu.</p>
+    <div class="video-wrap">
+      <iframe id="yt" src="https://www.youtube-nocookie.com/embed/R82jCLXpWwI?enablejsapi=1&rel=0" title="Pitcast #1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ============== AI SEARCH (pod videem) ============== -->
+<section id="ai">
+  <div class="wrap">
+    <h2>Zeptej se besedy</h2>
+    <p class="section-lead">AI prohledá celou besedu a vrátí krátkou odpověď + doporučení, kde začít sledovat. Když odpověď v přepisu není, AI to řekne narovinu.</p>
+    <div class="ai-box">
+      <form id="ai-form" onsubmit="return false">
+        <div class="ai-input-row">
+          <input class="ai-input" id="ai-q" placeholder="Např. Proč je bezpečnost hodnota č. 1?" autocomplete="off">
+          <button class="ai-submit" id="ai-submit">Zeptat se</button>
+        </div>
+        <div class="ai-chips" id="ai-chips">
+          <button type="button" class="ai-chip" data-q="Proč je bezpečnost hodnota číslo 1?">Proč je bezpečnost č. 1?</button>
+          <button type="button" class="ai-chip" data-q="Co přesně znamená udržitelný servis v Pitlandu?">Co je udržitelný servis?</button>
+          <button type="button" class="ai-chip" data-q="Jaký je ideální SAM a co musí splňovat?">Ideální SAM?</button>
+          <button type="button" class="ai-chip" data-q="Proč Pitland během covidu málem skončil?">Pitland a COVID?</button>
+          <button type="button" class="ai-chip" data-q="Jak vznikla myšlenka Pitlandu?">Jak vznikl Pitland?</button>
+          <button type="button" class="ai-chip" data-q="Proč nepoužíváme slovo instruktor?">Proč ne „instruktor"?</button>
+        </div>
+      </form>
+      <div class="ai-answer" id="ai-answer">
+        <div class="ans-start" id="ans-start" style="display:none"></div>
+        <p class="ans-text" id="ans-text"></p>
+        <div class="ans-citations" id="ans-citations"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== KAPITOLY ============== -->
+<section id="kapitoly">
+  <div class="wrap">
+    <h2>Kapitoly</h2>
+    <p class="section-lead">Klikni na kapitolu — video skočí na daný moment.</p>
+    <div class="filters" id="filters">
+      <button class="filter active" data-cat="all">Vše</button>
+      <button class="filter" data-cat="hist">Historie</button>
+      <button class="filter" data-cat="filoz">Filozofie &amp; hodnoty</button>
+      <button class="filter" data-cat="provoz">Provoz</button>
+      <button class="filter" data-cat="budoucnost">Budoucnost</button>
+    </div>
+    <div class="chapters" id="chapters"></div>
+  </div>
+</section>
+
+<!-- ============== PILÍŘE ============== -->
+<section id="pilire">
+  <div class="wrap">
+    <h2>5 pilířů Pitlandu</h2>
+    <p class="section-lead">Pět hodnot, na kterých stojí každodenní provoz i dlouhodobá vize. Klikni na timestamp, uslyšíš to přímo od jednoho z Jirků.</p>
+    <div class="pillars" id="pillars"></div>
+  </div>
+</section>
+
+<!-- ============== ARCHETYP SAMa ============== -->
+<section id="sam">
+  <div class="wrap">
+    <h2>Archetyp SAMa</h2>
+    <p class="section-lead">Pitland vědomě nepoužívá slovo „instruktor“. SAM je průvodce — ne autorita nad žákem.</p>
+    <div class="archetype">
+      <div>
+        <blockquote>
+          „Jeden z těch archetypů je ten ideální SAM — protože ho hrozně baví jezdit na motorce, a ještě víc ho baví, když to někdo nový zažije.“
+          <cite>— Jiří Matela, 1:01:51 <button class="ts-btn" data-ts="3711">↪ přehrát</button></cite>
+        </blockquote>
+        <p style="margin-top:18px;font-size:14px;color:var(--muted)">Proč Pitland zvolil nové slovo? Zakladatelé měli sami negativní zkušenosti s „instruktory“ — autoritativním přístupem, kde je instruktor nadřazený žákovi. SAM je záměrně něco jiného.</p>
+        <p style="margin-top:10px"><button class="ts-btn" data-ts="2436">↪ 0:40:36 Novák o rozdílu instruktor vs. SAM</button></p>
+      </div>
+      <ul class="traits">
+        <li><strong>Vnitřní vůle &amp; vášeň</strong>Baví ho jezdit, má s motorkou vlastní vztah (nebo chce ten vztah navázat).</li>
+        <li><strong>Radost ze sdílení</strong>Ještě víc než sám jezdit ho baví, když někdo nový dostane ten „wow“ zážitek.</li>
+        <li><strong>Průvodce, ne autorita</strong>Přístup založený na empatii, ne na nadřazenosti. Prochází cestu se žákem, ne před ním.</li>
+        <li><strong>Zná vlastní strach</strong>Ví, jaké to je mít v začátcích strach — proto dokáže provést i někoho, kdo se bojí víc než on tenkrát.</li>
+        <li><strong>Zodpovědnost za bezpečnost</strong>Neustále sleduje, co se na dráze nebo kruzích děje. Je připraven zasáhnout dřív, než se něco stane.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FUCKUPY ============== -->
+<section id="fuckupy">
+  <div class="wrap">
+    <h2>Fuckupy a lekce</h2>
+    <p class="section-lead">Bez těchto tří momentů by Pitland nebyl, kde je. Co jsme se z nich naučili.</p>
+    <div class="fuckups" id="fuckups"></div>
+  </div>
+</section>
+
+<!-- ============== SLOVNÍK ============== -->
+<section id="slovnik">
+  <div class="wrap">
+    <h2>Slovník pojmů</h2>
+    <p class="section-lead">Zkratky a žargon, který v besedě zazní.</p>
+    <div class="glossary" id="glossary"></div>
+  </div>
+</section>
+
+<!-- ============== REFLEXE ============== -->
+<section id="reflexe">
+  <div class="wrap">
+    <div class="reflect-grid">
+
+      <form class="reflect" id="reflect-form" onsubmit="return false">
+        <h3 class="reflect-h">Otázka pro tebe</h3>
+        <p class="reflect-sub">Zajímá nás tvoje zpětná vazba — čteme každou odpověď. Všechna pole jsou nepovinná; klidně pošli anonymně.</p>
+
+        <label>Co z toho, o čem jsme mluvili, vidíš, že se v Pitlandu reálně děje?</label>
+        <textarea name="dari" placeholder="Třeba konkrétní moment, chování, rituál…"></textarea>
+
+        <label>A co naopak cítíš, že se nedaří?</label>
+        <textarea name="nedari" placeholder="Kde vidíš mezeru mezi tím, co říkáme a co reálně žijeme?"></textarea>
+
+        <label>Jméno <span style="color:var(--muted);font-weight:400">(volitelně)</span></label>
+        <input class="text-input" type="text" name="jmeno" placeholder="Abychom věděli, s kým to probrat — nebo nech prázdné.">
+
+        <button type="button" id="reflect-submit">Odeslat reflexi</button>
+        <span id="reflect-status" style="margin-left:14px;color:var(--muted);font-size:13px"></span>
+      </form>
+
+      <form class="reflect" id="next-form" onsubmit="return false">
+        <h3 class="reflect-h">Chceš se příště zúčastnit?!</h3>
+        <p class="reflect-sub">Podobný formát plánujeme tvořit pravidelně.</p>
+
+        <label class="check-row">
+          <input type="checkbox" id="next-join" name="join">
+          <span>Chci se zúčastnit, dejte vědět termín</span>
+        </label>
+
+        <input class="text-input" type="text" id="next-name" name="name" placeholder="Jméno a Příjmení">
+
+        <label style="margin-top:14px">Na jaké téma bychom se měli bavit příště?!</label>
+
+        <label class="radio-row">
+          <input type="radio" name="topic" value="any" checked>
+          <span>Cokoliv bude dobré</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="topic" value="custom">
+          <span>Mám konkrétní téma:</span>
+        </label>
+        <input class="text-input" type="text" id="next-topic" name="topicText" placeholder="Napiš téma…" disabled>
+
+        <button type="button" id="next-submit" style="margin-top:14px">Odeslat</button>
+        <span id="next-status" style="margin-left:14px;color:var(--muted);font-size:13px"></span>
+      </form>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Pitcast • <a href="https://www.pitland.cz">pitland.cz</a> • interní podcast pro SAMy a spolupracovníky
+  </div>
+</footer>
+
+<!-- ============== DATA + LOGIKA ============== -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+/* ===== KONFIGURACE — TADY NAHRADIT ===== */
+const VIDEO_ID = "R82jCLXpWwI";   // YouTube ID videa (za v=) — vyměnit po uploadu
+const AI_ENDPOINT = "https://script.google.com/macros/s/AKfycbyesB7--mS5C8GjXSoh9ZiPE5Assa53DGnpJMVfGY2zsNXLN9rVZW1mWU3WROpYo9eqAQ/exec";              // URL Apps Script deploymentu /exec — vyplnit po deploy
+const REFLECT_ENDPOINT = "https://script.google.com/macros/s/AKfycbyesB7--mS5C8GjXSoh9ZiPE5Assa53DGnpJMVfGY2zsNXLN9rVZW1mWU3WROpYo9eqAQ/exec";         // URL Apps Script endpointu pro formulář — volitelné
+
+/* ===== KAPITOLY ===== */
+const CHAPTERS = [
+  {t:0,      title:"Úvod: proč natáčíme tuhle besedu",        cat:"hist"},
+  {t:160,    title:"Jak se Jiří Matela a Jiří Novák potkali", cat:"hist"},
+  {t:324,    title:"Myšlenka Pitlandu: proč uzavřený bezpečný trénink", cat:"filoz"},
+  {t:608,    title:"6 měsíců od nuly k otevření haly",        cat:"hist"},
+  {t:804,    title:"Paralela se skydivingem — proč Pitland funguje", cat:"filoz"},
+  {t:1168,   title:"Největší fuckupy: otevření, Suzuki a COVID", cat:"hist"},
+  {t:1576,   title:"Geneze produktů a proč vyhrály kurzy",     cat:"provoz"},
+  {t:1923,   title:"„Mistři“ vs. začátečníci — změna pohledu na výuku", cat:"filoz"},
+  {t:2164,   title:"Jak vznikl SAM (a proč ne „instruktor“)",  cat:"filoz"},
+  {t:2657,   title:"Vize 2029–2030 a franšíza",                cat:"budoucnost"},
+  {t:2887,   title:"Vývoj e-pita",                             cat:"hist"},
+  {t:2999,   title:"Bezpečnost jako hodnota č. 1",             cat:"filoz"},
+  {t:3438,   title:"Volné jízdy — komu, kdy, proč",            cat:"provoz"},
+  {t:3640,   title:"Archetyp ideálního SAMa",                  cat:"provoz"},
+  {t:4095,   title:"Co dělá dobrou službu pro lidi",           cat:"filoz"},
+  {t:4344,   title:"5 pilířů Pitlandu",                        cat:"filoz"},
+  {t:4444,   title:"Co se změnilo a co vymizelo",              cat:"hist"},
+  {t:4683,   title:"Závěr a poděkování",                       cat:"hist"}
+];
+
+/* ===== PILÍŘE ===== */
+const PILLARS = [
+  {
+    id:"bezp", cls:"bezp", num:"01",
+    title:"Bezpečnost",
+    def:"Nejvyšší priorita Pitlandu. Když si musíme vybrat mezi zábavou a bezpečností, vždy upřednostníme bezpečnost.",
+    quotes:[
+      {ts:3278, spk:"Jiří Novák", text:"Bezpečnost vnímám jako nejvyšší prioritu v Pitlandu, vůbec jako fungování Pitlandu. Pokud bych měl určit nebo porovnat bezpečnost a zábavu, tak ta bezpečnost bude na prvním místě."},
+      {ts:943,  spk:"Jiří Matela", text:"Často říkám, že když spěchám, tak nejedu na motorce."}
+    ],
+    practice:"<strong>Pro SAMa:</strong> jedním okem vždycky hlídej dráhu, i když zrovna někomu něco vysvětluješ. Když někdo padá opakovaně, zastav ho a řeš to — nečekej, až se stane něco vážnějšího."
+  },
+  {
+    id:"udrz", cls:"udrz", num:"02",
+    title:"Udržitelnost",
+    def:"Neděláme víc, než dokážeme dlouhodobě garantovat. Hranice služby chrání kvalitu pro všechny.",
+    quotes:[
+      {ts:4346, spk:"Jiří Matela", text:"Udržitelný servis — který můžeme replikovat, opakovat, rozvíjet. A co už je část služby, kterou nemůžeme dělat, protože by nás to zahubilo."},
+      {ts:4182, spk:"Jiří Matela", text:"U těch služeb je to přesně si dát tu hranici: co můžu poskytnout a co nemůžu, protože tím bych svůj byznys poškozoval."}
+    ],
+    practice:"<strong>Pro SAMa:</strong> když zákazník žádá něco mimo produkt („hala je prázdná, pusť mě na kruhy zdarma“), slušně odmítni. Pokud uděláš výjimku jednou, vytvoří se očekávání, které pak musíme zklamat — což paradoxně vytvoří nespokojeného zákazníka."
+  },
+  {
+    id:"prof", cls:"prof", num:"03",
+    title:"Profesionalita",
+    def:"Priorita je vyřešit problém zákazníka. Naše interní problémy zákazníka nezajímají. Není třeba mu vysvětlovat, že kolega udělal chybu — musíme mu nabídnout řešení.",
+    quotes:[
+      {ts:4382, spk:"Jiří Novák", text:"Profesionalita je o tom, jak se stavím k řešení těch problémů. Prioritou je vyřešit problém zákazníka — naše interní problémy zákazníka nezajímají."},
+      {ts:2548, spk:"Jiří Novák", text:"Profesionalitu spíš určuje to, jak přistupuju k tý věci a jakou odpovědnost si beru za toho člověka, o kterýho se starám."}
+    ],
+    practice:"<strong>Pro SAMa:</strong> když něco nefunguje, neříkej to zákazníkovi ve stylu „to nám nejde“. Zaměř se na to, co můžeš nabídnout. Profesionalita není titul — je to přístup."
+  },
+  {
+    id:"serv", cls:"serv", num:"04",
+    title:"Zákaznický servis",
+    def:"Každý, kdo přijde, má poznat, že je vítaný. Pitland má být „svět, kde věci fungují lépe“.",
+    quotes:[
+      {ts:4358, spk:"Jiří Novák", text:"Nastavení toho, že jsme strašně rádi, že tady každý z těch zákazníků vůbec přišel a že mu to dáváme najevo — aby poznal, že je tady vítaný a není spíš na obtíž."}
+    ],
+    practice:"<strong>Pro SAMa:</strong> přidaná hodnota často není v ceně, ale v drobnostech — pozdrav, zajímat se, vyslechnout, nabídnout něco navíc, když má zákazník čas. Wow efekt si pamatují."
+  },
+  {
+    id:"uceni", cls:"uceni", num:"05",
+    title:"Učení hrou",
+    def:"SAM, ne instruktor. Průvodcovství, ne autorita. Jezdec se nebojí, protože SAM vytváří bezpečné prostředí plné porozumění.",
+    quotes:[
+      {ts:2436, spk:"Jiří Novák", text:"Instruktor je z principu věci nadřazený svému svěřenci. Časem se u mě udělala averze vůči instruktorství. Já si u sebe chci držet to, že jsem průvodce, ne nadřazená autorita."},
+      {ts:2411, spk:"Jiří Matela", text:"Jsem schopný s ním projít tu jeho cestu, překonat ten strach, ty obtíže — protože jsem si tím sám prošel."}
+    ],
+    practice:"<strong>Pro SAMa:</strong> když někdo má strach, nerozřezávej ho logikou — projdi jeho cestu s ním. Vzpomeň si, jak ti bylo, když jsi zažíval něco poprvé. Empatie překoná autoritu."
+  }
+];
+
+/* ===== FUCKUPY ===== */
+const FUCKUPS = [
+  {
+    ts:707,
+    title:"Barva se musí válečkovat!",
+    body:"Před odletem do Afriky Jirka Matela poprvé testoval novou podlahu s balotinou. Oblékl se, nastartoval a hned dvakrát spadl. Chtěli jsme si ušetřit práci a stříkali barvu strojem — kuličky nedržely a klouzaly.",
+    lesson:"Nové postupy nasazuj pomalu, ověřuj změny a domýšlej důsledky. Později jsme barvu se sklem zase válečkovali a tento postup opakujeme doposud."
+  },
+  {
+    ts:1200,
+    title:"Šestkrát kousek od zavření (COVID)",
+    body:"V březnu 2020 jsme poprvé měli vybookováno na celý měsíc dopředu. A 11. 3. přišel lockdown. Během covidu jsme 6× zavírali a znovu otvírali. Lidi jsme sem nabírali „na testování nových motorek“ — jediný legální důvod být v hale.",
+    lesson:"Na každý problém existuje řešení. Potřebujeme se soustředit na hledání řešení, a ne na problémy."
+  },
+  {
+    ts:1758,
+    title:"Vlastníma rukama jsme si zabili B2B byznys",
+    body:"Původní plán byl pronájem haly pro mototrenéry, autoškoly a motoškoly — budou sem vodit svoje klienty. To se nepodařilo, protože nás okolnosti donutili přijít s vlastním produktem.",
+    lesson:"Vymýšlejme službu pro sebe — bude to opravdové. A pokud máš v rukou unikátní projekt, je to jedinečná příležitost udávat směr namísto kopírování."
+  }
+];
+
+/* ===== SLOVNÍK ===== */
+const GLOSSARY = [
+  {term:"SAM",          def:"Samostatný asistent motovýcviku — záměrně ne „instruktor“. SAM je ve stejné rovině s jezdci, je jim oporou a průvodcem."},
+  {term:"e-pit / epit", def:"Elektrický pitbike vyvinutý speciálně pro Pitland. Zhruba 3/4 velikosti běžné motorky, bez hluku a výfukových zplodin — proto se dá jezdit uvnitř celý rok."},
+  {term:"Pitbike",      def:"Malá motorka určená původně pro přesun mezi boxy v paddocku (pit lane). Roman Starba ho považuje za ideální nástroj pro trénink."},
+  {term:"Kruhy",        def:"Tréninková plocha pro základní cviky — rozjezdy, zastavování, osmičky, pohled, úhly náklonu."},
+  {term:"Dráha",        def:"Hlavní závodní dráha Pitlandu, kde se jezdí kola na čas nebo volné jízdy."},
+  {term:"Volná jízda",  def:"Produkt bez SAMa — 3 rozjížďky po 6:45 min v rámci hodiny. Klient jezdí sám podle svého tempa. První návštěva vyžaduje ověření dovedností na kruzích."},
+  {term:"Adheze",       def:"Přilnavost pneumatiky k povrchu. Základ kontroly nad motorkou — když o ni přijdeš, padáš."},
+  {term:"bezpečná zóna",def:"Vymezené místo na kruzích, kde je dovoleno zastavit. Mimo zóny zastavovat nelze — zabraňujeme možným kolizím."},
+  {term:"Větrný tunel", def:"Zařízení pro výcvik skydivingu. Pro Pitland je to velká inspirace — „větrný tunel pro motorkáře“."}
+];
+
+/* ===== RENDER ===== */
+function renderChapters(filter="all"){
+  const box = document.getElementById("chapters");
+  box.innerHTML = "";
+  CHAPTERS.filter(c=>filter==="all"||c.cat===filter).forEach(c=>{
+    const el = document.createElement("div");
+    el.className = "chapter";
+    el.innerHTML = `<span class="ts">${fmt(c.t)}</span><span class="title">${escapeHtml(c.title)}</span><span class="cat">${catLabel(c.cat)}</span>`;
+    el.onclick = () => seekTo(c.t);
+    box.appendChild(el);
+  });
+}
+function renderPillars(){
+  const box = document.getElementById("pillars");
+  PILLARS.forEach(p=>{
+    const quotes = p.quotes.map(q=>`
+      <blockquote>„${escapeHtml(q.text)}“
+        <cite>— ${escapeHtml(q.spk)}, <button class="ts-btn" data-ts="${q.ts}">${fmt(q.ts)}</button></cite>
+      </blockquote>`).join("");
+    const el = document.createElement("div");
+    el.className = "pillar " + p.cls;
+    el.innerHTML = `<h3><span class="num">${p.num}</span>${escapeHtml(p.title)}</h3>
+      <p class="def">${escapeHtml(p.def)}</p>
+      ${quotes}
+      <p class="practice">${p.practice}</p>`;
+    box.appendChild(el);
+  });
+}
+function renderFuckups(){
+  const box = document.getElementById("fuckups");
+  FUCKUPS.forEach(f=>{
+    const el = document.createElement("div");
+    el.className = "fuck";
+    el.innerHTML = `<span class="tag"><button class="ts-btn" data-ts="${f.ts}">${fmt(f.ts)}</button></span>
+      <h4>${escapeHtml(f.title)}</h4>
+      <p>${escapeHtml(f.body)}</p>
+      <div class="lesson"><strong>Lekce:</strong> ${escapeHtml(f.lesson)}</div>`;
+    box.appendChild(el);
+  });
+}
+function renderGlossary(){
+  const box = document.getElementById("glossary");
+  GLOSSARY.forEach(g=>{
+    const dl = document.createElement("dl");
+    dl.className = "term";
+    dl.innerHTML = `<dt>${escapeHtml(g.term)}</dt><dd>${escapeHtml(g.def)}</dd>`;
+    box.appendChild(dl);
+  });
+}
+
+/* ===== HELPERS ===== */
+function fmt(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),x=s%60;return (h?h+":":"")+String(m).padStart(h?2:1,"0")+":"+String(x).padStart(2,"0")}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function catLabel(c){return {hist:"Historie",filoz:"Hodnoty",provoz:"Provoz",budoucnost:"Budoucnost"}[c]||c}
+
+/* ===== YT PLAYER ===== */
+let ytPlayer = null;
+function onYouTubeIframeAPIReady(){
+  ytPlayer = new YT.Player("yt", {events:{onReady:()=>{}}});
+}
+function seekTo(sec){
+  if(!ytPlayer || !ytPlayer.seekTo) return;
+  ytPlayer.seekTo(sec, true);
+  ytPlayer.playVideo && ytPlayer.playVideo();
+  document.querySelector(".video-wrap").scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+/* ===== FILTERS ===== */
+document.getElementById("filters").addEventListener("click", e=>{
+  if(e.target.classList.contains("filter")){
+    document.querySelectorAll("#filters .filter").forEach(b=>b.classList.remove("active"));
+    e.target.classList.add("active");
+    renderChapters(e.target.dataset.cat);
+  }
+});
+
+/* ===== CLICK DELEGATION pro timestamp tlačítka ===== */
+document.body.addEventListener("click", e=>{
+  const btn = e.target.closest(".ts-btn, .cite-item");
+  if(btn && btn.dataset.ts) seekTo(parseInt(btn.dataset.ts,10));
+});
+
+/* ===== AI SEARCH ===== */
+const aiQ = document.getElementById("ai-q");
+const aiSubmit = document.getElementById("ai-submit");
+const aiAnswer = document.getElementById("ai-answer");
+const ansStart = document.getElementById("ans-start");
+const ansText  = document.getElementById("ans-text");
+const ansCites = document.getElementById("ans-citations");
+
+document.querySelectorAll(".ai-chip").forEach(c=>{
+  c.onclick = () => { aiQ.value = c.dataset.q; askAI(); };
+});
+aiSubmit.onclick = askAI;
+aiQ.addEventListener("keydown", e=>{ if(e.key==="Enter"){e.preventDefault();askAI();} });
+
+async function askAI(){
+  const q = aiQ.value.trim();
+  if(!q) return;
+  aiAnswer.classList.add("show","loading");
+  ansStart.style.display = "none";
+  ansText.textContent = "Přemýšlím";
+  ansCites.innerHTML = "";
+  aiSubmit.disabled = true;
+
+  if(!AI_ENDPOINT){
+    aiAnswer.classList.remove("loading");
+    ansText.innerHTML = '<span class="ai-error">AI endpoint není nakonfigurovaný. Vyplň <code>AI_ENDPOINT</code> v hlavičce souboru po deploy Apps Scriptu.</span>';
+    aiSubmit.disabled = false;
+    return;
+  }
+
+  try{
+    const res = await fetch(AI_ENDPOINT, {
+      method:"POST",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify({question: q})
+    });
+    const data = await res.json();
+    aiAnswer.classList.remove("loading");
+
+    if(data.error){
+      ansText.innerHTML = '<span class="ai-error">'+escapeHtml(data.error)+'</span>';
+    } else if(data.unanswerable){
+      ansText.textContent = data.answer || "Tohle v této besedě nezaznělo, nedokážu na to odpovědět.";
+    } else {
+      ansText.textContent = data.answer || "";
+      if(data.start_ts !== undefined && data.start_label){
+        ansStart.style.display = "block";
+        ansStart.innerHTML = `<strong>▶ Začni sledovat v ${fmt(data.start_ts)}</strong> — ${escapeHtml(data.start_label)} <button class="ts-btn" data-ts="${data.start_ts}" style="margin-left:8px">↪ přehrát</button>`;
+      }
+      if(Array.isArray(data.citations)){
+        ansCites.innerHTML = data.citations.map(c=>`
+          <div class="cite-item" data-ts="${c.ts}">
+            <span class="cite-ts">${fmt(c.ts)}</span>
+            <div class="cite-body">
+              <div class="cite-spk">${escapeHtml(c.speaker||"")}</div>
+              <div>„${escapeHtml(c.text||"")}“</div>
+            </div>
+          </div>`).join("");
+      }
+    }
+  } catch(err){
+    aiAnswer.classList.remove("loading");
+    ansText.innerHTML = '<span class="ai-error">Něco se pokazilo: '+escapeHtml(err.message)+'</span>';
+  } finally {
+    aiSubmit.disabled = false;
+  }
+}
+
+/* ===== FORM HELPERS ===== */
+async function submitForm({btn, status, form, payload, okText, emptyCheck}){
+  if(!REFLECT_ENDPOINT){
+    status.textContent = "Endpoint není nakonfigurovaný (viz REFLECT_ENDPOINT).";
+    return;
+  }
+  if(emptyCheck && emptyCheck()){
+    status.textContent = "Vyplň aspoň jedno pole, než odešleš.";
+    return;
+  }
+  const originalLabel = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Odesílám…";
+  status.textContent = "";
+  try{
+    const res = await fetch(REFLECT_ENDPOINT, {
+      method:"POST",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json().catch(()=>({}));
+    if(data && data.error){
+      status.textContent = "Chyba: " + data.error;
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      return;
+    }
+    btn.textContent = "✓ " + okText;
+    form.reset();
+    setTimeout(()=>{
+      btn.textContent = originalLabel;
+      btn.disabled = false;
+    }, 3000);
+  } catch(err){
+    status.textContent = "Něco se pokazilo: " + err.message;
+    btn.disabled = false;
+    btn.textContent = originalLabel;
+  }
+}
+
+/* ===== REFLECT FORM (reflexe) ===== */
+document.getElementById("reflect-submit").onclick = () => {
+  const form = document.getElementById("reflect-form");
+  const btn = document.getElementById("reflect-submit");
+  const status = document.getElementById("reflect-status");
+  const fd = new FormData(form);
+  const payload = Object.fromEntries(fd);
+  payload.type = "reflexe";
+  submitForm({
+    btn, status, form, payload,
+    okText: "Odesláno, díky!",
+    emptyCheck: () => !payload.dari && !payload.nedari && !payload.jmeno
+  });
+};
+
+/* ===== NEXT FORM (příští beseda) ===== */
+const nextTopicInput = document.getElementById("next-topic");
+document.querySelectorAll('#next-form input[name="topic"]').forEach(r=>{
+  r.addEventListener("change", ()=>{
+    const custom = document.querySelector('#next-form input[name="topic"][value="custom"]').checked;
+    nextTopicInput.disabled = !custom;
+    if(custom) nextTopicInput.focus();
+  });
+});
+document.getElementById("next-submit").onclick = () => {
+  const form = document.getElementById("next-form");
+  const btn = document.getElementById("next-submit");
+  const status = document.getElementById("next-status");
+  const fd = new FormData(form);
+  const payload = Object.fromEntries(fd);
+  payload.join = document.getElementById("next-join").checked ? "ano" : "ne";
+  payload.type = "pristi";
+  submitForm({
+    btn, status, form, payload,
+    okText: "Zaznamenáno!",
+    emptyCheck: () => payload.join !== "ano" && !payload.name && !payload.topicText
+  });
+  // po resetu vrátit disabled na téma-custom
+  setTimeout(()=>{ nextTopicInput.disabled = true; }, 3100);
+};
+
+/* ===== INIT ===== */
+renderChapters();
+renderPillars();
+renderFuckups();
+renderGlossary();
+</script>
+
+</body>
+</html>
