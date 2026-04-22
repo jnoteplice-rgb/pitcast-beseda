@@ -24,6 +24,9 @@
   .hero-sub{color:var(--muted);font-size:16px;margin:0 0 24px}
   .video-wrap{position:relative;padding-top:56.25%;background:#000;border-radius:12px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,0.4)}
   .video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .audio-wrap{margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+  .audio-wrap .audio-label{color:var(--muted);font-size:13px;display:flex;align-items:center;gap:8px}
+  .audio-wrap audio{width:100%;display:block;outline:none}
   .hero-meta{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:14px;margin-top:14px}
   .hero-meta span::before{content:"•";color:var(--line);margin-right:10px}
   .hero-meta span:first-child::before{content:none;margin:0}
@@ -164,6 +167,10 @@
     <p class="section-lead">Pokud máš radši vlastní cestu, klikni níž na konkrétní kapitolu nebo hodnotu.</p>
     <div class="video-wrap">
       <iframe id="yt" src="https://www.youtube-nocookie.com/embed/R82jCLXpWwI?enablejsapi=1&rel=0&playsinline=1&modestbranding=1&origin=https://jnoteplice-rgb.github.io" title="Pitcast #1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="audio-wrap">
+      <div class="audio-label">🎧 Nebo poslouchej jen zvuk — hraje i při zhasnutém displeji (mobil/sluchátka)</div>
+      <audio id="audio" controls preload="metadata" src="beseda-1.mp3"></audio>
     </div>
   </div>
 </section>
@@ -521,6 +528,33 @@ function seekTo(sec){
   ytPlayer.playVideo && ytPlayer.playVideo();
   document.querySelector(".video-wrap").scrollIntoView({behavior:"smooth",block:"center"});
 }
+
+/* ===== AUDIO + MEDIASESSION (lock-screen controls, background playback) ===== */
+(function(){
+  const a = document.getElementById("audio");
+  if(!a) return;
+  function setupMediaSession(){
+    if(!("mediaSession" in navigator)) return;
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: "Pitcast #1 \u2013 Vize a hodnoty",
+        artist: "Pitland",
+        album: "Pitcast",
+        artwork: [
+          { src: "https://img.youtube.com/vi/R82jCLXpWwI/maxresdefault.jpg", sizes: "1280x720", type: "image/jpeg" },
+          { src: "https://img.youtube.com/vi/R82jCLXpWwI/hqdefault.jpg", sizes: "480x360", type: "image/jpeg" }
+        ]
+      });
+      navigator.mediaSession.setActionHandler("play", ()=> a.play());
+      navigator.mediaSession.setActionHandler("pause", ()=> a.pause());
+      navigator.mediaSession.setActionHandler("seekbackward", (d)=>{ a.currentTime = Math.max(0, a.currentTime - (d && d.seekOffset || 15)); });
+      navigator.mediaSession.setActionHandler("seekforward", (d)=>{ a.currentTime = Math.min(a.duration||0, a.currentTime + (d && d.seekOffset || 15)); });
+      navigator.mediaSession.setActionHandler("seekto", (d)=>{ if(d && typeof d.seekTime === "number") a.currentTime = d.seekTime; });
+    } catch(err) {}
+  }
+  a.addEventListener("play", setupMediaSession, { once: false });
+  a.addEventListener("loadedmetadata", setupMediaSession, { once: true });
+})();
 
 /* ===== FILTERS ===== */
 document.getElementById("filters").addEventListener("click", e=>{
