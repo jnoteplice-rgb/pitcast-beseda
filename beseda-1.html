@@ -135,10 +135,10 @@
 
   /* mobile */
   @media (max-width:640px){
-    .hero-title{font-size:24px}
-    .chapters{grid-template-columns:1fr}
-    section{padding:32px 0}
-    .ai-input-row{flex-direction:column}
+    .hero-title{font-size:22px;line-height:1.2} header.hero{padding:28px 0 20px} .hero-sub{font-size:14px;margin:0 0 16px} .hero-meta{gap:8px 14px;font-size:12px;margin-top:10px} .hero-meta span::before{margin-right:8px} h2{font-size:19px} .section-lead{font-size:14px;margin:0 0 16px} .wrap{padding:0 16px}
+    .chapters{grid-template-columns:1fr} .pillars{grid-template-columns:1fr;gap:12px} .pillar{padding:16px} .pillar h3{font-size:16px} .archetype{padding:18px;gap:16px} .archetype blockquote{font-size:16px} .fuckups{grid-template-columns:1fr;gap:12px} .glossary{grid-template-columns:1fr;gap:8px} .reflect{padding:18px} .reflect .reflect-h{font-size:17px}
+    section{padding:28px 0} .ai-box{padding:16px} .ai-input{font-size:16px;padding:12px} .ai-submit{width:100%;padding:12px;font-size:15px;min-height:44px} .ai-chips{gap:6px;margin-bottom:14px} .ai-chip{font-size:11px;padding:5px 10px} .filter{font-size:12px;padding:6px 12px}
+    .ai-input-row{flex-direction:column;gap:8px} .reflect textarea{font-size:16px} .reflect .text-input{font-size:16px} .reflect button{width:100%;padding:12px;font-size:15px;min-height:44px} .ai-answer{padding:14px} .ai-answer .ans-text{font-size:15px}
   }
 </style>
 </head>
@@ -163,7 +163,7 @@
     <h2>Proč Pitland vznikl a kam jde <span class="title-sep">|</span> Beseda o vizi a hodnotách <span class="title-sep">|</span> Pitcast #1</h2>
     <p class="section-lead">Pokud máš radši vlastní cestu, klikni níž na konkrétní kapitolu nebo hodnotu.</p>
     <div class="video-wrap">
-      <iframe id="yt" src="https://www.youtube.com/embed/R82jCLXpWwI?enablejsapi=1&rel=0&playsinline=1&modestbranding=1" title="Pitcast #1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <iframe id="yt" src="https://www.youtube.com/embed/R82jCLXpWwI?enablejsapi=1&rel=0&playsinline=1&modestbranding=1&origin=https://jnoteplice-rgb.github.io" title="Pitcast #1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
   </div>
 </section>
@@ -171,7 +171,7 @@
 <!-- ============== AI SEARCH (pod videem) ============== -->
 <section id="ai">
   <div class="wrap">
-    <h2>Zeptej se besedy</h2>
+    <h2>Zeptej se</h2>
     <p class="section-lead">AI prohledá celou besedu a vrátí krátkou odpověď + doporučení, kde začít sledovat. Když odpověď v přepisu není, AI to řekne narovinu.</p>
     <div class="ai-box">
       <form id="ai-form" onsubmit="return false">
