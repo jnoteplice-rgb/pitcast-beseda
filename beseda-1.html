@@ -499,8 +499,21 @@ function catLabel(c){return {hist:"Historie",filoz:"Hodnoty",provoz:"Provoz",bud
 
 /* ===== YT PLAYER ===== */
 let ytPlayer = null;
+let ytRetried = false;
 function onYouTubeIframeAPIReady(){
-  ytPlayer = new YT.Player("yt", {events:{onReady:()=>{}}});
+  ytPlayer = new YT.Player("yt", {events:{onReady:()=>{}, onError: onYtError}});
+}
+function onYtError(e){
+  // 101/150/153 = "embed not allowed" / flaky embed init — 1× tiše obnovit iframe
+  if(ytRetried) return;
+  ytRetried = true;
+  const iframe = document.getElementById("yt");
+  if(!iframe) return;
+  const base = iframe.src.replace(/&_r=\d+/, "");
+  iframe.addEventListener("load", function onload(){
+    setTimeout(()=>{ try{ ytPlayer = new YT.Player("yt", {events:{onReady:()=>{}}}); }catch(err){} }, 300);
+  }, {once:true});
+  iframe.src = base + "&_r=" + Date.now();
 }
 function seekTo(sec){
   if(!ytPlayer || !ytPlayer.seekTo) return;
