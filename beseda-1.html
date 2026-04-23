@@ -338,6 +338,7 @@
 const VIDEO_ID = "R82jCLXpWwI";   // YouTube ID videa (za v=) — vyměnit po uploadu
 const AI_ENDPOINT = "https://script.google.com/macros/s/AKfycbyesB7--mS5C8GjXSoh9ZiPE5Assa53DGnpJMVfGY2zsNXLN9rVZW1mWU3WROpYo9eqAQ/exec";              // URL Apps Script deploymentu /exec — vyplnit po deploy
 const REFLECT_ENDPOINT = "https://script.google.com/macros/s/AKfycbyesB7--mS5C8GjXSoh9ZiPE5Assa53DGnpJMVfGY2zsNXLN9rVZW1mWU3WROpYo9eqAQ/exec";         // URL Apps Script endpointu pro formulář — volitelné
+const EPISODE_ID = "beseda-1";
 
 /* ===== KAPITOLY ===== */
 const CHAPTERS = [
@@ -605,7 +606,7 @@ async function askAI(){
     const res = await fetch(AI_ENDPOINT, {
       method:"POST",
       headers:{"Content-Type":"text/plain;charset=utf-8"},
-      body: JSON.stringify({question: q})
+      body: JSON.stringify({question: q, episode: EPISODE_ID})
     });
     const data = await res.json();
     aiAnswer.classList.remove("loading");
@@ -657,7 +658,7 @@ async function submitForm({btn, status, form, payload, okText, emptyCheck}){
     const res = await fetch(REFLECT_ENDPOINT, {
       method:"POST",
       headers:{"Content-Type":"text/plain;charset=utf-8"},
-      body: JSON.stringify(payload)
+      body: JSON.stringify(Object.assign({}, payload, {episode: EPISODE_ID}))
     });
     const data = await res.json().catch(()=>({}));
     if(data && data.error){
